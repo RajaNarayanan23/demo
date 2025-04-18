@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const userId = localStorage.getItem("userId");
+            const hasVoted = localStorage.getItem("hasVoted");
+
+            if (!userId) {
+                alert("❌ You must log in first!");
+                window.location.href = "login.html";
+            } else if (hasVoted === "true") {
+                document.getElementById("voteForm").innerHTML = "<h3 class='text-success'>✅ Vote Casted!</h3>";
+            }
+        });
+    </script>
+
+    <div class="container mt-5">
+        <h2>Vote</h2>
+        <p>Welcome! Cast your vote below.</p>
+
+        <div id="voteForm">
+            <div class="mb-3">
+                <label for="candidate">Choose a candidate:</label>
+                <select id="candidate" class="form-control">
+                    <option value="1">Candidate 1</option>
+                    <option value="2">Candidate 2</option>
+                    <option value="3">Candidate 3</option>
+                </select>
+            </div>
+            <button id="voteBtn" class="btn btn-success">Submit Vote</button>
+        </div>
+
+        <!-- Logout button -->
+        <button id="logoutBtn" class="btn btn-danger mt-3">Logout</button>
+    </div>
+
+    <script>
+        document.getElementById("logoutBtn").addEventListener("click", function () {
+            localStorage.removeItem("userId"); // Clear session
+            localStorage.removeItem("hasVoted"); // Clear voting flag for next session
+            window.location.href = "login.html";
+        });
+
+        document.getElementById("voteBtn").addEventListener("click", async function () {
+            const userId = localStorage.getItem("userId");
+            const hasVoted = localStorage.getItem("hasVoted");
+
+            if (!userId) {
+                alert("❌ Session expired! Please log in again.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            if (hasVoted === "true") {
+                alert("❌ You have already voted! Only one vote is allowed.");
+                return;
+            }
+
+            const candidateId = document.getElementById("candidate").value;
+
+            try {
+                const response = await fetch("https://localhost:7044/api/vote", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId, candidateId })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert("✅ Vote submitted successfully!");
+                    localStorage.setItem("hasVoted", "true"); // Store that the user has voted
+                    document.getElementById("voteForm").innerHTML = "<h3 class='text-success'>✅ Vote Casted!</h3>";
+                } else {
+                    alert("❌ Voting failed: " + (result.message || "Error occurred"));
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("❌ Server error, please try again.");
+            }
+        });
+    </script>
+
+</body>
+</html>

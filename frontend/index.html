@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Voting System</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url("BG.jpg");
+            /* background-repeat: no-repeat;
+            background-size: cover; */
+            font-family: 'Open Sans', sans-serif;
+        }
+        h1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+        p {
+            font-size: 1.2rem;
+            animation: fadeIn 3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar will be loaded here -->
+    <div id="navbar-container"></div>
+
+    <div class="container text-center mt-5">
+        <h1>Welcome to the Online Voting System</h1>
+        <p>Register, login, and vote securely!</p>
+    </div>
+
+    <div class="container section">
+        <h2>Register</h2>
+        <p>To participate in the voting process, please register by providing your details. Ensure your information is accurate to avoid any issues.</p>
+        <button class="btn btn-primary" onclick="window.location.href='register.html'">Register Now</button>
+    </div>
+
+    <div class="container section">
+        <h2>Login</h2>
+        <p>If you have already registered, please login to access your account and cast your vote.</p>
+        <button class="btn btn-secondary" onclick="window.location.href='login.html'">Login</button>
+    </div>
+
+    <script>
+        // Load Navbar
+        fetch("navbar.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("navbar-container").innerHTML = data;
+            })
+            .catch(error => console.error("❌ Navbar loading failed:", error));
+    </script>
+</body>
+</html>
